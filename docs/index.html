@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#f3f5f7">
+  <title>Tus vales</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <main class="lienzo">
+    <div class="lateral">
+      <header class="cabecera">
+        <h1>Tus vales</h1>
+        <p id="progreso" class="progreso"></p>
+      </header>
+
+      <form id="acertijo" class="panel" novalidate hidden>
+        <p id="pregunta" class="pregunta"></p>
+        <div id="campos" class="campos"></div>
+        <button id="comprobar" class="boton" type="submit">Comprobar</button>
+        <p id="resultado" class="resultado" role="status"></p>
+      </form>
+
+      <p id="aviso" class="aviso" hidden>
+        <span id="aviso-texto"></span>
+        <button id="reintentar" class="enlace" type="button">Reintentar</button>
+      </p>
+    </div>
+
+    <ul id="tickets" class="tickets"></ul>
+    <noscript><p>Esta web necesita JavaScript para funcionar.</p></noscript>
+  </main>
+
+  <dialog id="detalle" class="detalle" aria-labelledby="detalle-nombre">
+    <article id="hoja" class="hoja">
+      <div class="hoja__cuerpo">
+        <button id="cerrar" class="cerrar" type="button" aria-label="Cerrar"></button>
+        <span id="detalle-icono" class="hoja__icono"></span>
+        <h2 id="detalle-nombre" class="hoja__nombre"></h2>
+        <p id="detalle-texto" class="hoja__texto"></p>
+        <div id="detalle-campo" class="campo" hidden>
+          <label for="detalle-entrada">Vale por</label>
+          <input id="detalle-entrada" class="entrada" type="text" maxlength="71" placeholder="lo que tú quieras" autocomplete="off" enterkeyhint="done">
+        </div>
+        <p id="detalle-sello" class="sello sello--grande" hidden>Canjeado</p>
+      </div>
+      <div class="hoja__pie">
+        <p id="detalle-hecho" class="hoja__hecho"></p>
+        <div id="talon" class="hoja__talon">
+          <button id="canjear" class="boton" type="button">Canjear</button>
+          <div id="confirmar" class="confirmar" hidden>
+            <p>¿Seguro? Solo se puede canjear una vez.</p>
+            <div class="fila">
+              <button id="confirmar-si" class="boton" type="button">Sí, canjear</button>
+              <button id="confirmar-no" class="boton boton--secundario" type="button">Todavía no</button>
+            </div>
+          </div>
+          <p id="detalle-error" class="error" role="alert"></p>
+        </div>
+      </div>
+    </article>
+  </dialog>
+</body>
+</html>

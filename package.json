@@ -1,0 +1,10 @@
+{
+  "name": "vales",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "preparar": "node preparar.mjs",
+    "servidor": "node pruebas/servidor.mjs",
+    "probar": "node --test \"pruebas/*.test.mjs\""
+  }
+}
