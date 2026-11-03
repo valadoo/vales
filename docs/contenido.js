@@ -5,28 +5,28 @@ export default {
     {
       "id": "masajito",
       "nombre": "Vale por un masajito",
-      "texto": "Media hora de masaje, con aceite y sin prisas. Tú eliges la zona y yo no me quejo de que se me cansan las manos.",
+      "texto": "Te hago un masaje cuando quieras, que dure un buen rato.",
       "color": "rosa",
       "icono": "masaje"
     },
     {
       "id": "perras",
       "nombre": "Vale por buscar un sitio para dejar a las perras libres",
-      "texto": "Encuentro un sitio donde puedan correr sueltas sin peligro, lo compruebo antes y os llevo. Puppy y Lili acaban reventadas y tú, tranquila.",
+      "texto": "Encuentro un sitio donde puedan correr sueltas sin peligro, lo compruebo antes y os llevo.",
       "color": "azul",
       "icono": "huella"
     },
     {
       "id": "mini",
       "nombre": "Vale por una limpieza del mini",
-      "texto": "Lo dejo como nuevo por dentro y por fuera: aspirador, cristales y adiós a los pelos de perra de los asientos. Tú solo me das las llaves.",
+      "texto": "Te limpio el mini por dentro y por fuera (si me ayudas, mejor).",
       "color": "amarillo",
       "icono": "coche"
     },
     {
       "id": "cena",
       "nombre": "Vale por una cena hoy",
-      "texto": "Esta misma noche cenamos lo que quieras: fuera, o en casa cocinando yo. Sin mirar la cuenta y sin el clásico «me da igual, elige tú».",
+      "texto": "Esta noche me planto en tu casa con un BK, da igual si tenía otros planes. Tú decides.",
       "color": "verde",
       "icono": "cubiertos"
     },
@@ -40,14 +40,14 @@ export default {
     {
       "id": "sialtodo",
       "nombre": "Vale por un día de decir que sí a todo",
-      "texto": "Durante 24 horas, a todo lo que propongas digo que sí: planes, pelis, sitios y caprichos. Sin poner pegas y sin poner caras.",
+      "texto": "Durante un día te tengo que decir a todo que sí. Este es poderoso, úsalo bien.",
       "color": "azul",
       "icono": "pulgar"
     },
     {
       "id": "sorpresa",
       "nombre": "Vale por un plan sorpresa",
-      "texto": "Me reservas un día y organizo el resto. No te cuento nada: te enteras al llegar.",
+      "texto": "Un día hacemos algo sin que tú sepas qué vamos a hacer.",
       "color": "amarillo",
       "icono": "regalo"
     },
