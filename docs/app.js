@@ -8,6 +8,7 @@ const DIAS = Array.from({ length: 31 }, (_, indice) => String(indice + 1));
 const PREFIJO = 'Vale por ';
 const SIN_RED = 'No ha salido. El vale sigue intacto: inténtalo otra vez en un rato.';
 const ENLACE_MALO = 'Este enlace no es el bueno: abre el que te pasé.';
+const TANDA = 1;
 
 const $ = (id) => document.getElementById(id);
 const sinMovimiento = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -32,6 +33,14 @@ const almacen = {
 const claveDelEnlace = new URLSearchParams(location.hash.slice(1)).get('k');
 if (claveDelEnlace) almacen.guardar('clave', claveDelEnlace);
 const clave = claveDelEnlace ?? almacen.leer('clave', null);
+
+// Subir TANDA olvida una vez el avance guardado en cada móvil. No toca la clave ni los canjes del script.
+if (almacen.leer('tanda', null) !== TANDA) {
+  almacen.guardar('tanda', TANDA);
+  almacen.guardar('aciertos', 0);
+  almacen.guardar('canjes', {});
+  almacen.guardar('borradores', {});
+}
 
 let aciertos = almacen.leer('aciertos', 0);
 let canjes = almacen.leer('canjes', {});
