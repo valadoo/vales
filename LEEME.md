@@ -35,7 +35,7 @@ npm run preparar
 
 Ese comando genera `docs/contenido.js` y `privado/codigo-para-google.gs`, avisa de lo que falta por rellenar y muestra el enlace para ella.
 
-Si añades o quitas vales, tienes que volver a pegar `privado/codigo-para-google.gs` en Google y desplegar una versión nueva.
+Si añades o quitas vales o acertijos, tienes que volver a pegar `privado/codigo-para-google.gs` en Google y desplegar una versión nueva, como se explica en «Actualizar el script de Google».
 
 ## Publicar
 
@@ -47,6 +47,14 @@ Si añades o quitas vales, tienes que volver a pegar `privado/codigo-para-google
 4. Autoriza el script. Google avisará de que la aplicación no está verificada porque es tuya: entra en Configuración avanzada y continúa.
 5. Copia la URL de la aplicación web. Termina en `/exec`.
 
+### Actualizar el script de Google
+
+1. Ejecuta `npm run preparar`.
+2. En el proyecto de Apps Script, borra el código, pega el nuevo contenido de `privado/codigo-para-google.gs` y guarda.
+3. Ve a Implementar > Gestionar implementaciones, pulsa el lápiz, elige Versión **Nueva versión** e Implementar.
+
+Así la URL no cambia. Con Nueva implementación saldría otra URL, y habría que ponerla en `api` y volver a subir la web.
+
 ### 2. GitHub Pages
 
 1. Crea en github.com un repositorio público llamado `vales`, vacío.
@@ -57,6 +65,8 @@ Si añades o quitas vales, tienes que volver a pegar `privado/codigo-para-google
 ### 3. Prueba real antes de dárselo
 
 Abre el enlace en una ventana privada del móvil y canjea un vale. Debe llegarte el correo. Para dejar ese vale disponible otra vez, en el proyecto de Apps Script ve a Configuración del proyecto > Propiedades del script y borra la propiedad `canje:` de ese vale.
+
+Las preguntas acertadas también se guardan ahí, en la propiedad `aciertos`, para que no se pierdan aunque el móvil borre los datos de la web o ella abra el enlace en otro navegador. Las comparten todos los móviles que abran su enlace. Si lo pruebas en el tuyo, lo que aciertes le contará a ella. Para que vuelva a empezar las preguntas, borra `aciertos`.
 
 ## Límites
 

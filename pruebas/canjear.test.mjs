@@ -4,7 +4,8 @@ import { CORREO, crearScript } from './google-falso.mjs';
 
 const CLAVE = 'clave-de-prueba';
 const IDS = ['mini', 'blanco1'];
-const crear = (opciones = {}) => crearScript({ clave: CLAVE, ids: IDS, ...opciones });
+const crear = (opciones = {}) => crearScript({ clave: CLAVE, ids: IDS, acertijos: 3, ...opciones });
+const acertar = (aciertos, k = CLAVE) => ({ k, accion: 'acertar', aciertos: String(aciertos) });
 const canje = (extra = {}) => ({ k: CLAVE, accion: 'canjear', id: 'mini', nombre: 'Vale por una limpieza del mini', ...extra });
 
 test('rechaza una clave incorrecta sin enviar nada ni enseñar los canjes', () => {
@@ -72,4 +73,35 @@ test('un vale en blanco no puede meter saltos de línea en el asunto', () => {
   const { llamar, correos } = crear();
   llamar(canje({ id: 'blanco1', nombre: 'Vale por\nuna\r\ntarde' }));
   assert.equal(correos[0].asunto, '¡SE HA CANJEADO "Vale por una tarde"!');
+});
+
+test('guarda los acertijos acertados y los devuelve con el estado', () => {
+  const { llamar } = crear();
+  assert.equal(llamar({ k: CLAVE, accion: 'estado' }).aciertos, 0);
+  const guardado = llamar(acertar(2));
+  assert.equal(guardado.codigo, 200);
+  assert.equal(guardado.aciertos, 2);
+  assert.equal(llamar({ k: CLAVE, accion: 'estado' }).aciertos, 2);
+});
+
+test('los aciertos solo suben: un móvil que va por detrás no los rebaja', () => {
+  const { llamar } = crear();
+  llamar(acertar(3));
+  assert.equal(llamar(acertar(1)).aciertos, 3);
+  assert.equal(llamar({ k: CLAVE, accion: 'estado' }).aciertos, 3);
+});
+
+test('rechaza aciertos con otra clave o fuera de rango sin guardar nada', () => {
+  const { llamar } = crear();
+  assert.equal(llamar(acertar(1, 'mala')).codigo, 403);
+  for (const malo of [0, -1, 4, 1.5, 'tres', '']) assert.equal(llamar(acertar(malo)).codigo, 400);
+  assert.equal(llamar({ k: CLAVE, accion: 'estado' }).aciertos, 0);
+});
+
+test('guardar aciertos no cuenta como canje ni envía correos, y suelta el bloqueo', () => {
+  const { llamar, correos, estado } = crear();
+  llamar(acertar(2));
+  assert.deepEqual(llamar({ k: CLAVE, accion: 'estado' }).canjes, {});
+  assert.equal(correos.length, 0);
+  assert.equal(estado.bloqueos, 0);
 });

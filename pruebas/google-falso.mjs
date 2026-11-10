@@ -5,7 +5,7 @@ import vm from 'node:vm';
 const PLANTILLA = readFileSync(new URL('../google/canjear.gs', import.meta.url), 'utf8');
 export const CORREO = 'correo@ejemplo.com';
 
-export function crearScript({ clave, ids, fallaCorreo = () => false }) {
+export function crearScript({ clave, ids, acertijos, fallaCorreo = () => false }) {
   const correos = [];
   const propiedades = new Map();
   const estado = { bloqueos: 0 };
@@ -44,7 +44,8 @@ export function crearScript({ clave, ids, fallaCorreo = () => false }) {
   const codigo = PLANTILLA
     .replace('__CLAVE__', clave)
     .replace('__CORREO__', CORREO)
-    .replace('__IDS__', JSON.stringify(ids));
+    .replace('__IDS__', JSON.stringify(ids))
+    .replace('__ACERTIJOS__', String(acertijos));
   vm.createContext(entorno);
   vm.runInContext(codigo, entorno);
 

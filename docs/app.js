@@ -34,7 +34,8 @@ const claveDelEnlace = new URLSearchParams(location.hash.slice(1)).get('k');
 if (claveDelEnlace) almacen.guardar('clave', claveDelEnlace);
 const clave = claveDelEnlace ?? almacen.leer('clave', null);
 
-// Subir TANDA olvida una vez el avance guardado en cada móvil. No toca la clave ni los canjes del script.
+// Subir TANDA olvida una vez el avance guardado en cada móvil. No toca la clave ni lo guardado en el script:
+// para empezar de cero también hay que borrar allí la propiedad `aciertos`, o el móvil lo recupera al cargar.
 if (almacen.leer('tanda', null) !== TANDA) {
   almacen.guardar('tanda', TANDA);
   almacen.guardar('aciertos', 0);
@@ -184,7 +185,8 @@ function pintar(idsNuevos = []) {
   );
 }
 
-function sincronizarAciertos() {
+function sincronizarAciertos(enGoogle = 0) {
+  aciertos = Math.min(Math.max(aciertos, enGoogle), acertijos.length);
   for (const id of Object.keys(canjes)) {
     if (pasoDe.has(id)) aciertos = Math.max(aciertos, pasoDe.get(id) + 1);
   }
@@ -198,6 +200,14 @@ async function pedir(datos) {
   });
   const cuerpo = await respuesta.json();
   return { codigo: cuerpo.codigo, cuerpo };
+}
+
+// El móvil puede borrar lo que guarda la web (navegador de WhatsApp, modo privado, Safari tras 7 días),
+// así que el avance también se guarda en el script. Si falla, se reintenta la próxima vez que cargue.
+async function subirAciertos() {
+  try {
+    await pedir({ accion: 'acertar', aciertos });
+  } catch {}
 }
 
 function mostrarAviso(texto, conReintento) {
@@ -215,7 +225,10 @@ async function cargarCanjes() {
     if (codigo !== 200) throw new Error(`Estado ${codigo}`);
     canjes = cuerpo.canjes;
     almacen.guardar('canjes', canjes);
-    sincronizarAciertos();
+    // Un script antiguo no devuelve `aciertos`: entonces la web se apaña solo con lo de este móvil.
+    const enGoogle = typeof cuerpo.aciertos === 'number' ? cuerpo.aciertos : null;
+    sincronizarAciertos(enGoogle ?? 0);
+    if (enGoogle !== null && aciertos > enGoogle) subirAciertos();
     if (!abierto) pintar();
   } catch {
     mostrarAviso('No he podido comprobar qué vales has canjeado.', true);
@@ -262,6 +275,7 @@ async function comprobar(propuesta) {
 
   aciertos += 1;
   almacen.guardar('aciertos', aciertos);
+  subirAciertos();
   document.activeElement?.blur();
   const premios = acertijo.vales.map((id) => valePorId.get(id));
   $('resultado').textContent = premios.length > 1

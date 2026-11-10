@@ -1,10 +1,13 @@
-// Guarda cada canje una sola vez y avisa por correo. Es una plantilla: preparar.mjs rellena los
-// datos en privado/codigo-para-google.gs, que es el archivo que se pega en Google Apps Script.
+// Guarda cada canje una sola vez y avisa por correo. También guarda cuántos acertijos lleva acertados,
+// para que no los pierda aunque el móvil borre lo que guarda la web. Es una plantilla: preparar.mjs
+// rellena los datos en privado/codigo-para-google.gs, que es el archivo que se pega en Google Apps Script.
 const CLAVE = '__CLAVE__';
 const CORREO = '__CORREO__';
 const IDS = __IDS__;
+const TOTAL_ACERTIJOS = __ACERTIJOS__;
 const MAX_NOMBRE = 80;
 const PREFIJO = 'canje:';
+const ACIERTOS = 'aciertos';
 
 // Apps Script siempre responde con estado 200, así que el resultado real va dentro.
 function responder(codigo, cuerpo) {
@@ -22,6 +25,28 @@ function leerCanjes(propiedades) {
   return canjes;
 }
 
+function leerAciertos(propiedades) {
+  return Number(propiedades.getProperty(ACIERTOS)) || 0;
+}
+
+// El avance solo sube: un móvil que va por detrás nunca le quita lo que ya ha acertado.
+function guardarAciertos(propiedades, valor) {
+  const aciertos = Number(valor);
+  if (!Number.isInteger(aciertos) || aciertos < 1 || aciertos > TOTAL_ACERTIJOS) {
+    return responder(400, { error: 'aciertos' });
+  }
+
+  const bloqueo = LockService.getScriptLock();
+  bloqueo.waitLock(10000);
+  try {
+    const guardados = Math.max(leerAciertos(propiedades), aciertos);
+    propiedades.setProperty(ACIERTOS, String(guardados));
+    return responder(200, { aciertos: guardados });
+  } finally {
+    bloqueo.releaseLock();
+  }
+}
+
 function enviarAviso(nombre, fecha) {
   const cuando = Utilities.formatDate(fecha, 'Europe/Madrid', "dd/MM/yyyy 'a las' HH:mm");
   const titulo = `¡SE HA CANJEADO "${nombre}"!`;
@@ -33,7 +58,10 @@ function doPost(e) {
   if (datos.k !== CLAVE) return responder(403, { error: 'clave' });
 
   const propiedades = PropertiesService.getScriptProperties();
-  if (datos.accion === 'estado') return responder(200, { canjes: leerCanjes(propiedades) });
+  if (datos.accion === 'estado') {
+    return responder(200, { canjes: leerCanjes(propiedades), aciertos: leerAciertos(propiedades) });
+  }
+  if (datos.accion === 'acertar') return guardarAciertos(propiedades, datos.aciertos);
   if (datos.accion !== 'canjear') return responder(400, { error: 'accion' });
 
   const nombre = String(datos.nombre || '').replace(/\s+/g, ' ').trim();

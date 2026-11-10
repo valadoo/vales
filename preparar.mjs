@@ -43,7 +43,8 @@ const clave = readFileSync(rutaClave, 'utf8').trim();
 const codigoGoogle = readFileSync(new URL('google/canjear.gs', raiz), 'utf8')
   .replace('__CLAVE__', clave)
   .replace('__CORREO__', fuente.correo)
-  .replace('__IDS__', JSON.stringify([...ids]));
+  .replace('__IDS__', JSON.stringify([...ids]))
+  .replace('__ACERTIJOS__', String(acertijos.length));
 writeFileSync(new URL('privado/codigo-para-google.gs', raiz), codigoGoogle);
 
 const pendientes = [];

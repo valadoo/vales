@@ -14,6 +14,7 @@ let fallaCorreo = false;
 const nuevoScript = () => crearScript({
   clave: 'prueba',
   ids: contenido.vales.map((vale) => vale.id),
+  acertijos: contenido.acertijos.length,
   fallaCorreo: () => fallaCorreo,
 });
 let script = nuevoScript();
